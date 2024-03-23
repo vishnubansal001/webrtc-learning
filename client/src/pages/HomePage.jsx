@@ -6,18 +6,22 @@ const HomePage = () => {
   const { socket } = useSocket();
   const [email, setEmail] = useState("");
   const [roomCode, setRoomCode] = useState("");
-  const handleJoinedRoom = useCallback(({ roomId }) => {
-    navigate(`/room/${roomId}`);
-  }, []);
-
   const navigate = useNavigate();
+
+  const handleJoinedRoom = useCallback(
+    ({ roomId }) => {
+      navigate(`/room/${roomId}`);
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     socket.on("joined-room", handleJoinedRoom);
     return () => {
       socket.off("joined-room", handleJoinedRoom);
     };
-  }, [socket]);
+  }, [handleJoinedRoom, socket]);
+
   const handleJoinRoom = () => {
     socket.emit("join-room", { roomId: roomCode, emailId: email });
   };
