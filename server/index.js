@@ -34,6 +34,13 @@ io.on("connection", (socket) => {
       from: fromEmail,
     });
   });
+
+  socket.on("call-accepted", (data) => {
+    const { emailId, ans } = data;
+    console.log("Call accepted from", emailId);
+    const socketId = emailToSocketMapping.get(emailId);
+    socket.to(socketId).emit("call-accepted", { ans });
+  });
 });
 
 app.listen(8000, () => {
